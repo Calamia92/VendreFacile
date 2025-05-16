@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  api-gateway:
+    build: ./backend/api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - annonce-service
+      - messaging-service
+      - favorites-service
+    env_file:
+      - ./backend/api-gateway/.env
+    restart: unless-stopped
+
+  user-service:
+    build: ./backend/user-service
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./backend/user-service/.env
+    restart: unless-stopped
+
+  annonce-service:
+    build: ./backend/annonce-service
+    ports:
+      - "3002:3000"
+    env_file:
+      - ./backend/annonce-service/.env
+    restart: unless-stopped
+
+  messaging-service:
+    build: ./backend/messaging-service
+    ports:
+      - "3003:3000"
+    env_file:
+      - ./backend/messaging-service/.env
+    restart: unless-stopped
+
+  favorites-service:
+    build: ./backend/favorites-service
+    ports:
+      - "3004:3000"
+    env_file:
+      - ./backend/favorites-service/.env
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
